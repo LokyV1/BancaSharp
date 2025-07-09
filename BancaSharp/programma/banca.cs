@@ -1,28 +1,31 @@
 ﻿using BancaSharp.programma;
 using System;
 using System.Collections.Generic;
+using System.Linq; // Aggiungere per usare .Sum()
 
 public class Banca
 {
     public string Nome { get; set; }
     public List<Cliente> Clienti { get; set; } = new List<Cliente>();
-    public Dictionary<string, List<int>> Prestiti { get; set; } = new Dictionary<string, List<int>>();
+    public Dictionary<string, List<decimal>> Prestiti { get; set; } = new Dictionary<string, List<decimal>>(); // Cambiato int a decimal
 
     public void AggiungiCliente(Cliente cliente)
     {
         Clienti.Add(cliente);
+        // Aggiungi il prestito al dizionario della banca quando aggiungi il cliente
+        AggiungiPrestito(cliente.CodiceFiscaleIntestatario, (decimal)cliente.Ammontare); // Conversione esplicita
     }
 
-    public void AggiungiPrestito(string codiceFiscale, int ammontare)
+    public void AggiungiPrestito(string codiceFiscale, decimal ammontare) // Cambiato int a decimal
     {
         if (!Prestiti.ContainsKey(codiceFiscale))
         {
-            Prestiti[codiceFiscale] = new List<int>();
+            Prestiti[codiceFiscale] = new List<decimal>(); // Cambiato int a decimal
         }
         Prestiti[codiceFiscale].Add(ammontare);
     }
 
-    public int AmmontareTotalePrestiti(string codiceFiscale)
+    public decimal AmmontareTotalePrestiti(string codiceFiscale) // Cambiato int a decimal
     {
         if (Prestiti.ContainsKey(codiceFiscale))
         {
@@ -38,6 +41,7 @@ public class Program
     {
         var banca = new Banca { Nome = "BancaSharp" };
 
+        // Quando aggiungi un cliente, l'ammontare del prestito viene anche aggiunto al dizionario Prestiti della banca.
         banca.AggiungiCliente(new Cliente
         {
             Nome = "Mario",
@@ -156,8 +160,6 @@ public class Program
         }
 
 
-
-        Console.ReadLine();
         Console.WriteLine("Inserire codice fiscale");
         string codiceFiscale = Console.ReadLine();
         var clienteTrovato = banca.Clienti.Find(c => c.CodiceFiscaleIntestatario == codiceFiscale);
@@ -170,6 +172,6 @@ public class Program
         {
             Console.WriteLine("Cliente non trovato.");
         }
+        Console.ReadLine(); // Per mantenere la console aperta alla fine
     }
-
-    }
+}

@@ -1,4 +1,6 @@
-﻿namespace BancaSharp
+﻿using System;
+
+namespace BancaSharp
 {
     internal class Program
     {
